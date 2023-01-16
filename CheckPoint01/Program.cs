@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using static System.Net.Mime.MediaTypeNames;
 
 // ============================================================================================
 // CheckPoint01 - 숫자 달리기 게임
@@ -22,6 +23,7 @@ namespace CheckPoint01
     {
         static void Main(string[] args)
         {
+            
             Random rnd = new Random();
 
             const int RND_NUM = 3;
