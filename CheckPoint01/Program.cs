@@ -21,66 +21,81 @@ namespace CheckPoint01
 {
     internal class Program
     {
-        static void Main(string[] args)
+        const int RND_NUM = 3;
+
+        const int TRACK_LENGTH = 50;
+        const int USER_COUNT = 5;
+        const int DELAY_TIME = 100;
+
+        static int[] locations = new int[USER_COUNT];
+
+        static void PrintTrack()
         {
-            
+            Console.WriteLine(new string('-', TRACK_LENGTH + 1));
+            for (int i = 0; i < USER_COUNT; i++)
+            {
+                string track = new string(' ', locations[i]);
+                track += (i + 1).ToString();
+                if (locations[i] < TRACK_LENGTH)
+                    track += new string(' ', TRACK_LENGTH - locations[i] - 1);
+                track += '|';
+                Console.WriteLine(track);
+            }
+            Console.WriteLine(new string('-', TRACK_LENGTH + 1));
+        }
+        static void RandomRun()
+        {
             Random rnd = new Random();
 
-            const int RND_NUM = 3;
+            for (int i = 0; i < USER_COUNT; i++)
+            {
+                if (rnd.Next(0, RND_NUM) == 0)
+                    locations[i] += 2;
+                else
+                    locations[i]++;
+            }
+        }
+        static bool ProcessResult()
+        {
+            if (locations.Max() >= TRACK_LENGTH)
+            {
+                int maxLength = locations.Max();
+                for (int i = 0; i < USER_COUNT; i++)
+                {
+                    if (locations[i] == maxLength)
+                        Console.WriteLine("결과 : !!{0}번 선수 우승!!", i + 1);
+                }
 
-            const int TRACK_LENGTH = 50;
-            const int USER_COUNT = 5;
-            const int DELAY_TIME = 100;
+                Console.Write("다시 하려면 0번, 끝내려면 아무키나 누르세요.");
+                if (Console.ReadLine() == "0")
+                {
+                    locations = new int[USER_COUNT];
+                    System.Console.Clear();
+                    return true;
+                }
+                else
+                    return false;
+            }
+            return true;
+        }
 
-            int[] locations = new int[USER_COUNT];
+        static void Main(string[] args)
+        {
             while(true)
             {
-                Console.WriteLine(new string('-', TRACK_LENGTH + 1));
-                for(int i = 0; i < USER_COUNT; i++)
-                {
-                    string track = new string(' ', locations[i]);
-                    track += (i+1).ToString();
-                    if (locations[i] < TRACK_LENGTH)
-                        track += new string(' ', TRACK_LENGTH - locations[i] - 1);
-                    track += '|';
-                    Console.WriteLine(track);
-                }
-                Console.WriteLine(new string('-', TRACK_LENGTH + 1));
+                PrintTrack();
 
-                if(locations.Sum() == 0)
+                if (locations.Sum() == 0)
                 {
                     Console.WriteLine("준비! (시작하려면 엔터를 입력하세요.)");
                     Console.ReadLine();
                 }
 
+                if (!ProcessResult())
+                    break;
 
-                if (locations.Max() >= TRACK_LENGTH)
-                {
-                    int maxLength = locations.Max();
-                    for(int i = 0; i < USER_COUNT; i++)
-                    {
-                        if (locations[i] == maxLength)
-                            Console.WriteLine("결과 : !!{0}번 선수 우승!!", i+1);
-                    }
+                RandomRun();
 
-                    Console.Write("다시 하려면 0번, 끝내려면 아무키나 누르세요.");
-                    if(Console.ReadLine() == "0")
-                    {
-                        locations = new int[USER_COUNT];
-                        System.Console.Clear();
-                        continue;
-                    }
-                    else
-                        break;
-                }
-                
-                for(int i = 0; i < USER_COUNT; i++)
-                {
-                    if (rnd.Next(0, RND_NUM) == 0)
-                        locations[i] += 2;
-                    else
-                        locations[i]++;
-                }
                 Thread.Sleep(DELAY_TIME);
                 System.Console.Clear();
             }
